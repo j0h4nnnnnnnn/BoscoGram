@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Pública de Imágenes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        #main-container {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .gallery-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .gallery-image {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        #logo {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        #logo img {
+            width: 30px;
+            height: 30px;
+        }
+
+        #auth-links {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #auth-links a {
+            margin-left: 15px;
+        }
+
+        footer img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            background-color: #f2f2f2;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="logo">
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+    </div>
+    <div id="auth-links">
+        <a href="{{ url_for('login') }}">Iniciar Sesión</a>
+        <a href="{{ url_for('register') }}">Registrarse</a>
+    </div>
+
+    <div id="main-container">
+        <div class="gallery-container" id="gallery-container">
+            {% for image in images %}
+                <div class="gallery-image">
+                    <img src="{{ url_for('static', filename=image.filename) }}" alt="Imagen Filtrada">
+                    <p>Publicado por: {{ image.user.username }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="loader" style="text-align: center; display: none;">
+            <img src="{{ url_for('static', filename='loader.gif') }}" alt="Cargando..." style="width: 50px;">
+        </div>
+    </div>
+
+    <footer>
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+        <p>Autores: Paulina Azuero, John Sanmartin</p>
+        <p>Teléfono: 0968979043, 0989547906</p>
+        <p>Correo: pazuero@est.ups.edu.e, jsanmartinq1@est.ups.edu.ec</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentPage = 1;
+            const galleryContainer = document.getElementById('gallery-container');
+            const loader = document.getElementById('loader');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) {
+                    loadMoreImages();
+                }
+            });
+
+            async function loadMoreImages() {
+                loader.style.display = 'block';
+                currentPage++;
+
+                const response = await fetch(`/load_images?page=${currentPage}`);
+                const data = await response.json();
+
+                data.images.forEach(image => {
+                    const imageElement = document.createElement('div');
+                    imageElement.classList.add('gallery-image');
+                    imageElement.innerHTML = `
+                        <img src="${image.url}" alt="Imagen Filtrada">
+                        <p>Publicado por: ${image.username}</p>
+                    `;
+                    galleryContainer.appendChild(imageElement);
+                });
+
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

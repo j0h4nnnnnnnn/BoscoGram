@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Pública de Imágenes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        #main-container {
+            margin-top: 150px;
+            margin-bottom: 150px;
+        }
+
+        .gallery-image {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .gallery-image img {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+        }
+
+        #logo {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        #logo img {
+            width: 30px;
+            height: 30px;
+        }
+
+        footer img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            background-color: #f2f2f2;
+            padding: 10px 0;
+        }
+
+        .auth-links {
+            margin-top: 20px;
+        }
+
+        .auth-links a {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="logo">
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+    </div>
+
+    <div id="main-container">
+        <h1>Galería Pública de Imágenes</h1>
+        <div class="gallery-container">
+            {% for image in images %}
+                <div class="gallery-image">
+                    <img src="{{ url_for('static', filename=image.filename) }}" alt="Imagen Filtrada">
+                    <p>Publicado por: {{ image.user.username }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="auth-links">
+            <a href="{{ url_for('upload_image') }}">Subir Imagen</a>
+            <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <footer>
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+        <p>Autores: Paulina Azuero, John Sanmartin</p>
+        <p>Teléfono: 0968979043, 0989547906</p>
+        <p>Correo: pazuero@est.ups.edu.e, jsanmartinq1@est.ups.edu.ec</p>
+    </footer>
+</body>
+</html>

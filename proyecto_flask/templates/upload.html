@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Filtros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            margin-top: 100px;
+            margin-bottom: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        #logo {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        #logo img {
+            width: 30px;
+            height: 30px;
+        }
+
+        #user-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            font-size: 18px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-container input,
+        .input-container select,
+        .input-container button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .input-container button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .output-container {
+            margin-top: 20px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .auth-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .auth-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            background-color: #f2f2f2;
+            padding: 10px 0;
+        }
+
+        footer img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="logo">
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+    </div>
+    <div id="user-info">
+        Bienvenido, {{ username }}
+    </div>
+
+    <div id="main-container">
+        <div class="container">
+            <h1>Aplicación de Filtros de Imagen</h1>
+            <div class="input-container">
+                <form method="post" enctype="multipart/form-data">
+                    <label for="file">Seleccionar imagen:</label>
+                    <input type="file" id="file" name="file" accept="image/*" required>
+                    <label for="filterType">Tipo de Filtro:</label>
+                    <select id="filterType" name="filterType">
+                        <option value="emboss">Emboss</option>
+                        <option value="warm">Warm</option>
+                        <option value="logo">Logo</option>
+                        <option value="star">Star</option>
+                    </select>
+                    <label for="sobelSize">Tamaño de la máscara:</label>
+                    <input type="number" id="sobelSize" name="sobelSize" min="3" max="31" value="3" step="2">
+                    <button type="submit" name="apply_filter">Aplicar Filtro</button>
+                </form>
+            </div>
+
+            <div id="status-message">
+                {% if error %}
+                    <p>{{ error }}</p>
+                {% endif %}
+            </div>
+
+            <div class="output-container">
+                {% if image %}
+                    <div class="image-container">
+                        <h2>Imagen Filtrada</h2>
+                        <img src="{{ url_for('static', filename=image) }}" alt="Imagen Filtrada">
+                    </div>
+                    
+                    <div class="info-box">
+                        <p><strong>Tiempo transcurrido:</strong> {{ elapsed_time }} segundos</p>
+                        <p><strong>Filtro seleccionado:</strong> {{ filterType }}</p>
+                        <p><strong>Tamaño de los bloques:</strong> {{ numBloques }}</p>
+                        <p><strong>Tamaño de los hilos:</strong> {{ numThreads }}</p>
+                        <p><strong>Tamaño de la máscara para X, Y:</strong> {{ mascara }}</p>
+                    </div>
+
+                    <form method="post" action="{{ url_for('publish_image') }}">
+                        <input type="hidden" name="image_url" value="{{ image }}">
+                        <input type="hidden" name="filterType" value="{{ filterType }}">
+                        <input type="hidden" name="elapsed_time" value="{{ elapsed_time }}">
+                        <button type="submit" name="publish_image">Publicar Imagen</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <div class="auth-links">
+                <a href="{{ url_for('gallery') }}">Ver Galería</a>
+                <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="https://i.pinimg.com/564x/db/5c/72/db5c7215e1a7b02c4de1a3f65a778ba8.jpg" alt="Icono">
+        <p>Autores: Paulina Azuero, John Sanmartin</p>
+        <p>Teléfono: 0968979043, 0989547906</p>
+        <p>Correo: pazuero@est.ups.edu.e, jsanmartinq1@est.ups.edu.ec</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .register-container h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #333;
+        }
+
+        .register-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .register-container form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        .register-container form input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .register-container form button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .register-container form button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-container .message {
+            margin-top: 20px;
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .register-container .auth-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .register-container .auth-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1em;
+        }
+
+        .register-container .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Registrarse</h1>
+        <form method="post">
+            <label for="username">Nombre de usuario:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Registrarse</button>
+        </form>
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+        <div class="auth-links">
+            <a href="{{ url_for('login') }}">Iniciar Sesión</a>
+        </div>
+    </div>
+</body>
+</html>

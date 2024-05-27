@@ -1,0 +1,58 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.input-container {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    margin-right: 10px;
+}
+
+input[type="file"],
+select,
+input[type="number"],
+button {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.output-container {
+    margin-top: 20px;
+    text-align: center; /* Centramos la imagen */
+}
+
+h1, h2 {
+    margin-bottom: 10px;
+}
+
+/* Estilos para la imagen filtrada */
+.output-container img {
+    max-width: 50%; /* La imagen no se extenderá más allá del ancho máximo del contenedor */
+    height: auto; /* Mantenemos la relación de aspecto de la imagen */
+    display: block; /* La imagen se muestra como un bloque para centrarla horizontalmente */
+    margin: 0 auto; /* La centramos horizontalmente */
+}
